@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Weather Dashboard
 
 ### URL : https://sylviaprabudy.github.io/weather-dashboard/
@@ -47,3 +48,7 @@ A simple web application that allows users to search for a city to get the curre
 Sylvia Prabudy ©2020 All Rights Reserved.
 - - -
 
+=======
+# Future_fs_02
+"🌤 A weather web app built with React.js and Node.js that fetches real-time data from the OpenWeather API. Features include city search, live weather display, and the ability to save favorite locations."
+>>>>>>> 24c9db3abafa225b0c475d80ccb2c8b4edb5d4ae
