@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Weather Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+
+  <!-- Modern Glassmorphism CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+      min-height: 100vh;
+      margin: 0;
+      color: #222;
+      transition: background 0.4s, color 0.4s;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 2.5rem auto;
+      padding: 2.7rem;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 32px;
+      box-shadow: 0 12px 32px 0 rgba(31, 38, 135, 0.27);
+      backdrop-filter: blur(14px);
+      border: 2px solid rgba(255, 255, 255, 0.22);
+      position: relative;
+      animation: fadeIn 1.2s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 3.3rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 2px 2px 24px #7ed6df, 0 2px 8px #00000044;
+      margin-bottom: 2.2rem;
+      letter-spacing: 2.5px;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 2px 2px 24px #7ed6df, 0 2px 8px #00000044;
+      }
+
+      to {
+        text-shadow: 2px 2px 32px #48dbfb, 0 2px 16px #00000044;
+      }
+    }
+
+    .search-bar,
+    .favorites-bar,
+    .history-bar {
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 20px;
+      padding: 1.3rem;
+      margin-bottom: 1.7rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      animation: fadeIn 1.3s;
+    }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 700;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 2px 12px #0001;
+      letter-spacing: 1px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+      border: none;
+      color: #fff;
+      box-shadow: 0 0 12px #5b86e5aa;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background: linear-gradient(90deg, #5b86e5 0%, #36d1c4 100%);
+      color: #fff;
+      transform: scale(1.06);
+      box-shadow: 0 0 24px #36d1c4bb;
+    }
+
+    .btn-warning {
+      background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+      color: #222;
+      border: none;
+      box-shadow: 0 0 12px #ffd20077;
+    }
+
+    .btn-warning:hover,
+    .btn-warning:focus {
+      background: linear-gradient(90deg, #ffd200 0%, #f7971e 100%);
+      color: #fff;
+      transform: scale(1.06);
+      box-shadow: 0 0 24px #ffd200bb;
+    }
+
+    .btn-danger {
+      background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+      border: none;
+      color: #fff;
+      box-shadow: 0 0 12px #ff585877;
+    }
+
+    .btn-danger:hover,
+    .btn-danger:focus {
+      background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+      color: #fff;
+      transform: scale(1.06);
+      box-shadow: 0 0 24px #ff5858bb;
+    }
+
+    .list-group-item {
+      background: rgba(255, 255, 255, 0.85) !important;
+      border: none;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0001;
+      font-size: 1.08rem;
+    }
+
+    .list-group-item:hover {
+      background: #d0e6f7 !important;
+      transform: scale(1.04);
+      box-shadow: 0 4px 16px #5b86e555;
+    }
+
+    .weather-icon {
+      width: 110px;
+      height: 110px;
+      filter: drop-shadow(0 2px 16px #00b89455);
+      animation: popIn 0.8s;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.7);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+
+    .forecast {
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 20px;
+      padding: 1.3rem;
+      margin: 0.6rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      text-align: center;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      min-width: 155px;
+      animation: fadeIn 1.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .forecast:hover {
+      transform: scale(1.09) rotate(-2deg);
+      background: #e3f2fd;
+      box-shadow: 0 4px 24px #5b86e555;
+    }
+
+    .forecast::after {
+      content: "";
+      position: absolute;
+      top: -30px;
+      left: -30px;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #5b86e5 0%, transparent 70%);
+      opacity: 0.12;
+      z-index: 0;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1.2rem;
+      right: 2.2rem;
+      background: #fff;
+      border-radius: 50%;
+      border: none;
+      width: 48px;
+      height: 48px;
+      box-shadow: 0 2px 12px #5b86e555;
+      cursor: pointer;
+      font-size: 1.7rem;
+      color: #3498db;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover {
+      background: #3498db;
+      color: #fff;
+      transform: scale(1.13) rotate(-10deg);
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 9999;
+      display: none;
+      padding: 1.1rem 2.2rem;
+      background: linear-gradient(90deg, #36d1c4, #5b86e5);
+      color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px #5b86e555;
+      font-weight: 700;
+      font-size: 1.13rem;
+      letter-spacing: 1.2px;
+      animation: fadeIn 0.7s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #e3f2fd;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #b2bec3;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .forecast {
+        margin: 0.25rem;
+        min-width: 120px;
+      }
+
+      .theme-toggle {
+        right: 1rem;
+      }
+    }
+
+    /* Dark theme */
+    body.dark-theme {
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #eee;
+    }
+
+    body.dark-theme .container,
+    body.dark-theme .search-bar,
+    body.dark-theme .favorites-bar,
+    body.dark-theme .history-bar {
+      background: rgba(40, 40, 40, 0.7);
+      color: #eee;
+    }
+
+    body.dark-theme .list-group-item {
+      background: rgba(60, 60, 60, 0.88) !important;
+      color: #fff;
+    }
+
+    body.dark-theme .forecast {
+      background: rgba(60, 60, 60, 0.8);
+    }
+
+    body.dark-theme .btn-primary {
+      background: linear-gradient(90deg, #5b86e5 0%, #36d1c4 100%);
+    }
+
+    body.dark-theme .btn-warning {
+      background: linear-gradient(90deg, #ffd200 0%, #f7971e 100%);
+      color: #fff;
+    }
+
+    body.dark-theme .btn-danger {
+      background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+    }
+  </style>
+</head>
+
+<body>
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+  <header class="container-fluid text-center text-white bg-dark p-2">
+    <h1>Weather Dashboard</h1>
+  </header>
+  <div class="container">
+    <div class="search-bar mb-3">
+      <div class="form-row align-items-center">
+        <div class="col-12 col-md-8 mb-2 mb-md-0">
+          <input type="text" class="form-control" id="enter-city" placeholder="Enter city name">
+        </div>
+        <div class="col-6 col-md-2">
+          <button class="btn btn-primary w-100" id="search-button"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div class="col-6 col-md-2">
+          <button class="btn btn-warning w-100" id="add-favorite"><i class="fas fa-star"></i> Favorite</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="favorites-bar mb-3">
+          <h5><i class="fas fa-star text-warning"></i> Favorites</h5>
+          <ul id="favorite-cities" class="list-group mb-3"></ul>
+        </div>
+        <div class="history-bar mb-3">
+          <h5><i class="fas fa-history"></i> Search History</h5>
+          <div id="history"></div>
+          <button class="btn btn-danger btn-sm mt-2" id="clear-history"><i class="fas fa-trash"></i> Clear History
+          </button>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div id="today-weather" class="card d-none mb-3">
+          <div class="card-body">
+            <h3 id="city-name"></h3>
+            <img id="current-pic" class="weather-icon" src="" alt="" />
+            <p id="temperature"></p>
+            <p id="humidity"></p>
+            <p id="wind-speed"></p>
+            <p id="UV-index"></p>
+          </div>
+        </div>
+        <div id="fiveday-header" class="d-none">
+          <h4>5-Day Forecast:</h4>
+          <div class="d-flex flex-wrap justify-content-between">
+            <div class="forecast flex-fill m-1"></div>
+            <div class="forecast flex-fill m-1"></div>
+            <div class="forecast flex-fill m-1"></div>
+            <div class="forecast flex-fill m-1"></div>
+            <div class="forecast flex-fill m-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="toast"></div>
+  <div id="welcome-banner" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;transition:opacity 0.7s;">
+  <h1 style="font-size:3rem;color:#3498db;text-shadow:2px 2px 12px #0002;">Welcome to Weather Dashboard!</h1>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+window.onload = function() {
+  setTimeout(() => {
+    document.getElementById('welcome-banner').style.opacity = 0;
+    setTimeout(() => document.getElementById('welcome-banner').remove(), 700);
+  }, 1200);
+};
+</script>
+</body>
+
+</html>
